@@ -1,16 +1,21 @@
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 
 #define BUF_SIZE 1024
-#define PRINT_BUF_SIZE 1280
 
 void print_now() {
   time_t now;
   time(&now);
 
   struct tm *time_parts = localtime(&now);
+
+  if (!time_parts) {
+    perror("Error getting time");
+    exit(3);
+  }
 
   printf("[%d-%02d-%02d %02d:%02d:%02d] ",
       time_parts->tm_year + 1900,
@@ -28,7 +33,6 @@ void print_now() {
 int main() {
   char buffer[BUF_SIZE];
 
-
   // when true, print the time on the next iteration
   // allows us to avoid printing after the last newline
   bool output_time = true;
@@ -43,7 +47,10 @@ int main() {
 
       if (buffer[i] == '\n') {
         printf("\n");
-        fflush(stdout);
+        if (fflush(stdout) == EOF) {
+          perror("Unable to flush stdout");
+          exit(2);
+        }
         output_time = true;
       } else {
         fputc(buffer[i], stdout);
@@ -53,7 +60,7 @@ int main() {
 
   if (count_read < 0) {
     perror("Error reading from stdin");
-    return 1;
+    exit(1);
   }
 
   fflush(stdout);

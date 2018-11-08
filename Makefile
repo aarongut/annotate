@@ -1,4 +1,4 @@
-CFLAGS=--std=c99 -O2 -Wall -Wextra -pedantic
+CFLAGS=--std=c99 -O2 -Wall -Wextra -Werror -pedantic
 
 annotate: annotate.o
 
