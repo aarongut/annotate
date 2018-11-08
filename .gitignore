@@ -1,0 +1,10 @@
+# binary files
+annotate
+
+# object files
+*.o
+
+# temp stuff
+*.swp
+*.swo
+.DS_STORE
